@@ -1,0 +1,420 @@
+:root {
+  --bg-deep:      #0a0617;
+  --bg-mid:       #160d2e;
+  --bg-soft:      #211546;
+  --gold:         #e7c873;
+  --gold-bright:  #f6e2a6;
+  --gold-dim:     #9a7c3a;
+  --ink:          #e9e3f5;
+  --ink-soft:     #b9aedb;
+  --card-bg:      #1a1136;
+  --card-bg-2:    #2a1a52;
+  --glow:         rgba(231, 200, 115, 0.55);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* hidden должен побеждать display:flex у секций */
+[hidden] { display: none !important; }
+
+html, body {
+  min-height: 100%;
+}
+
+body {
+  font-family: 'EB Garamond', Georgia, 'Times New Roman', serif;
+  color: var(--ink);
+  background:
+    radial-gradient(120% 80% at 50% -10%, var(--bg-soft) 0%, var(--bg-mid) 38%, var(--bg-deep) 100%);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Звёздный фон */
+.stars-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    radial-gradient(1.5px 1.5px at 20% 30%, rgba(255,255,255,.8), transparent),
+    radial-gradient(1.5px 1.5px at 70% 20%, rgba(255,255,255,.6), transparent),
+    radial-gradient(1px 1px at 40% 70%, rgba(231,200,115,.7), transparent),
+    radial-gradient(1px 1px at 85% 60%, rgba(255,255,255,.5), transparent),
+    radial-gradient(1.5px 1.5px at 55% 45%, rgba(255,255,255,.6), transparent),
+    radial-gradient(1px 1px at 12% 80%, rgba(231,200,115,.5), transparent),
+    radial-gradient(1px 1px at 90% 88%, rgba(255,255,255,.5), transparent),
+    radial-gradient(1.5px 1.5px at 33% 12%, rgba(255,255,255,.5), transparent);
+  animation: twinkle 6s ease-in-out infinite alternate;
+}
+@keyframes twinkle {
+  from { opacity: .55; }
+  to   { opacity: 1; }
+}
+
+.page {
+  position: relative;
+  z-index: 1;
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 32px 18px 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* === Заголовок === */
+.header { text-align: center; margin-bottom: 28px; }
+
+.title {
+  font-family: 'Cinzel Decorative', serif;
+  font-weight: 900;
+  font-size: clamp(2rem, 7vw, 3.6rem);
+  letter-spacing: .04em;
+  color: var(--gold);
+  text-shadow:
+    0 0 12px rgba(231,200,115,.35),
+    0 2px 4px rgba(0,0,0,.6);
+}
+.title::before, .title::after {
+  content: '✦';
+  color: var(--gold-dim);
+  font-size: .5em;
+  vertical-align: middle;
+  margin: 0 .4em;
+}
+
+.subtitle {
+  margin-top: 14px;
+  font-size: clamp(1rem, 2.6vw, 1.25rem);
+  line-height: 1.6;
+  color: var(--ink-soft);
+  font-style: italic;
+}
+.subtitle em { color: var(--gold-bright); font-style: italic; }
+
+/* === Колода-веер === */
+.deck-stage {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 18px;
+}
+
+.deck {
+  position: relative;
+  width: 100%;
+  max-width: 620px;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  margin-bottom: 20px;
+}
+
+/* На узких экранах ужимаем весь веер, чтобы он не вылезал за края */
+@media (max-width: 560px) {
+  .deck { transform: scale(.66); transform-origin: center bottom; height: 230px; }
+}
+@media (max-width: 380px) {
+  .deck { transform: scale(.56); }
+}
+
+/* Карта в колоде */
+.deck-card {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 120px;
+  height: 200px;
+  margin-left: -60px;
+  border-radius: 12px;
+  cursor: pointer;
+  transform-origin: bottom center;
+  transition: transform .25s ease, filter .25s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.deck-card:hover,
+.deck-card:focus-visible {
+  transform: var(--hover-transform);
+  filter: drop-shadow(0 0 14px var(--glow));
+  z-index: 50 !important;
+  outline: none;
+}
+
+/* Рубашка карты — мистический орнамент */
+.card-back-art {
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  border: 2px solid var(--gold);
+  background-color: var(--card-bg);
+  background-image:
+    radial-gradient(circle at 50% 26%, rgba(246,226,166,.95) 0 3px, transparent 4px),
+    radial-gradient(circle at 50% 50%, transparent 0 30px, rgba(231,200,115,.55) 30px 31px, transparent 32px),
+    radial-gradient(circle at 50% 50%, transparent 0 22px, rgba(231,200,115,.4) 22px 23px, transparent 24px),
+    repeating-conic-gradient(from 0deg at 50% 50%, rgba(231,200,115,.16) 0deg 15deg, transparent 15deg 30deg),
+    radial-gradient(circle at 20% 20%, rgba(246,226,166,.5) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 80% 20%, rgba(246,226,166,.5) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 20% 80%, rgba(246,226,166,.5) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 80% 80%, rgba(246,226,166,.5) 0 1.5px, transparent 2px),
+    linear-gradient(135deg, var(--card-bg-2), var(--card-bg));
+  box-shadow:
+    inset 0 0 0 5px rgba(10,6,23,.6),
+    inset 0 0 0 6px rgba(231,200,115,.35),
+    0 6px 16px rgba(0,0,0,.5);
+  position: relative;
+}
+.card-back-art::after {
+  content: '☾';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 34px;
+  color: var(--gold-bright);
+  text-shadow: 0 0 10px var(--glow);
+}
+
+.deck-hint {
+  color: var(--ink-soft);
+  font-style: italic;
+  font-size: 1.05rem;
+  letter-spacing: .03em;
+  opacity: .85;
+}
+
+/* === Результат === */
+.result-stage {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+}
+
+/* Карта, которую вытянули */
+.drawn-card {
+  width: 220px;
+  height: 366px;
+  perspective: 1400px;
+  margin-bottom: 26px;
+}
+@media (max-width: 480px) {
+  .drawn-card { width: 184px; height: 306px; }
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  /* поворот по Y задаётся из JS; transition обеспечивает плавный переворот */
+  transform: rotateY(0deg);
+  transition: transform .32s ease-in;
+}
+
+/* Прилёт карты в центр (показываем рубашку, затем JS переворачивает) */
+.drawn-card.revealed {
+  animation: fly-in .42s cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes fly-in {
+  0%   { transform: translateY(46px) scale(.45); opacity: 0; }
+  100% { transform: translateY(0)    scale(1);   opacity: 1; }
+}
+
+.card-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+}
+/* По умолчанию видна рубашка, лицо скрыто. После переворота — наоборот. */
+.card-front { visibility: hidden; }
+.drawn-card.faceup .card-back  { visibility: hidden; }
+.drawn-card.faceup .card-front { visibility: visible; }
+/* Перевёрнутая карта (reversed) — лицо стоит вверх ногами */
+.drawn-card.reversed .card-front { transform: rotate(180deg); }
+
+.card-back {
+  /* оборотная сторона — мистический орнамент */
+  border: 2px solid var(--gold);
+  background-color: var(--card-bg);
+  background-image:
+    radial-gradient(circle at 50% 50%, transparent 0 40px, rgba(231,200,115,.5) 40px 41px, transparent 42px),
+    repeating-conic-gradient(from 0deg at 50% 50%, rgba(231,200,115,.14) 0deg 15deg, transparent 15deg 30deg),
+    linear-gradient(135deg, var(--card-bg-2), var(--card-bg));
+  box-shadow:
+    inset 0 0 0 5px rgba(10,6,23,.6),
+    inset 0 0 0 6px rgba(231,200,115,.35),
+    0 6px 16px rgba(0,0,0,.5);
+}
+.card-back::after {
+  content: '☾';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 38px;
+  color: var(--gold-bright);
+  text-shadow: 0 0 12px var(--glow);
+}
+
+/* Лицо карты-заглушки */
+.card-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 14px;
+  border: 2px solid var(--gold);
+  background:
+    radial-gradient(120% 90% at 50% 0%, var(--card-bg-2), var(--card-bg));
+  box-shadow:
+    inset 0 0 0 5px rgba(10,6,23,.55),
+    inset 0 0 0 6px rgba(231,200,115,.45),
+    inset 0 0 30px rgba(0,0,0,.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  overflow: hidden;
+}
+.drawn-card.revealed .card-front .card-frame {
+  animation: glow-pulse 1.6s ease-in-out 2;
+}
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: inset 0 0 0 5px rgba(10,6,23,.55), inset 0 0 0 6px rgba(231,200,115,.45), inset 0 0 30px rgba(0,0,0,.5), 0 0 0 rgba(231,200,115,0); }
+  50%      { box-shadow: inset 0 0 0 5px rgba(10,6,23,.55), inset 0 0 0 6px rgba(246,226,166,.9), inset 0 0 30px rgba(0,0,0,.5), 0 0 32px var(--glow); }
+}
+
+.card-corner {
+  position: absolute;
+  color: var(--gold);
+  font-size: 16px;
+  opacity: .8;
+}
+.card-corner.tl { top: 10px;    left: 12px;  }
+.card-corner.tr { top: 10px;    right: 12px; }
+.card-corner.bl { bottom: 10px; left: 12px;  }
+.card-corner.br { bottom: 10px; right: 12px; }
+
+.card-image {
+  max-width: 100%;
+  max-height: 60%;
+  object-fit: contain;
+  border-radius: 6px;
+}
+.card-emblem {
+  font-size: 64px;
+  color: var(--gold-bright);
+  text-shadow: 0 0 18px var(--glow);
+  line-height: 1;
+  margin-bottom: 18px;
+}
+.card-name {
+  font-family: 'Cinzel Decorative', serif;
+  font-weight: 700;
+  font-size: clamp(1.1rem, 5vw, 1.5rem);
+  color: var(--gold-bright);
+  text-align: center;
+  letter-spacing: .03em;
+  text-shadow: 0 1px 3px rgba(0,0,0,.7);
+}
+
+/* === Блок предсказания === */
+.prophecy {
+  width: 100%;
+  max-width: 540px;
+  text-align: center;
+  background: rgba(26, 17, 54, .66);
+  border: 1px solid rgba(231,200,115,.35);
+  border-radius: 16px;
+  padding: 26px 24px 28px;
+  backdrop-filter: blur(2px);
+  box-shadow: 0 8px 30px rgba(0,0,0,.4);
+  animation: rise .5s ease both;
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.prophecy-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.prophecy-name {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 1.5rem;
+  color: var(--gold);
+  text-shadow: 0 0 10px rgba(231,200,115,.3);
+}
+.prophecy-orientation {
+  font-size: .9rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: 3px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--gold-dim);
+  color: var(--gold-bright);
+}
+.prophecy-orientation.is-reversed {
+  border-color: #b06aa0;
+  color: #e9b9df;
+}
+
+.prophecy-text {
+  font-size: clamp(1.1rem, 3vw, 1.35rem);
+  line-height: 1.6;
+  color: var(--ink);
+  margin-bottom: 18px;
+}
+
+.disclaimer {
+  font-size: .8rem;
+  line-height: 1.4;
+  color: var(--ink-soft);
+  opacity: .6;
+  font-style: italic;
+  margin-bottom: 22px;
+}
+
+.again-btn {
+  font-family: 'EB Garamond', serif;
+  font-size: 1.1rem;
+  letter-spacing: .04em;
+  color: var(--bg-deep);
+  background: linear-gradient(135deg, var(--gold-bright), var(--gold));
+  border: none;
+  border-radius: 999px;
+  padding: 13px 34px;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(231,200,115,.35);
+  transition: transform .12s ease, box-shadow .2s ease;
+}
+.again-btn:hover  { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(231,200,115,.55); }
+.again-btn:active { transform: translateY(0); }
+
+/* === Ошибка === */
+.error-box {
+  max-width: 520px;
+  text-align: center;
+  background: rgba(60, 14, 30, .5);
+  border: 1px solid rgba(231,200,115,.4);
+  border-radius: 16px;
+  padding: 30px 26px;
+  margin-top: 30px;
+}
+.error-title {
+  font-family: 'Cinzel Decorative', serif;
+  color: var(--gold);
+  font-size: 1.4rem;
+  margin-bottom: 12px;
+}
+.error-text {
+  color: var(--ink-soft);
+  font-size: 1.05rem;
+  line-height: 1.5;
+}

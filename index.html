@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Предсказание BVG</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=EB+Garamond:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="stars-bg" aria-hidden="true"></div>
+
+  <main class="page">
+    <header class="header">
+      <h1 class="title">Предсказание&nbsp;BVG</h1>
+      <p class="subtitle">
+        Сосредоточься на вопросе: <em>«Когда придёт мой транспорт?»</em><br>
+        Закрой глаза, выдохни — и вытяни карту.
+      </p>
+    </header>
+
+    <!-- Сообщение об ошибке загрузки -->
+    <section id="error-box" class="error-box" hidden>
+      <p class="error-title">✦ Звёзды молчат ✦</p>
+      <p id="error-text" class="error-text"></p>
+    </section>
+
+    <!-- Колода-веер -->
+    <section id="deck-stage" class="deck-stage" hidden>
+      <div id="deck" class="deck" role="group" aria-label="Колода карт"></div>
+      <p class="deck-hint">Коснись любой карты</p>
+    </section>
+
+    <!-- Результат гадания -->
+    <section id="result-stage" class="result-stage" hidden>
+      <div id="drawn-card" class="drawn-card">
+        <div class="card-inner">
+          <div class="card-face card-back"></div>
+          <div class="card-face card-front">
+            <div class="card-frame">
+              <span class="card-corner tl">✦</span>
+              <span class="card-corner tr">✦</span>
+              <span class="card-corner bl">✦</span>
+              <span class="card-corner br">✦</span>
+              <img id="card-image" class="card-image" alt="" hidden>
+              <div class="card-emblem" aria-hidden="true">☾</div>
+              <div id="card-title" class="card-name"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="prophecy" class="prophecy" hidden>
+        <div class="prophecy-head">
+          <span id="prophecy-name" class="prophecy-name"></span>
+          <span id="prophecy-orientation" class="prophecy-orientation"></span>
+        </div>
+        <p id="prophecy-text" class="prophecy-text"></p>
+        <p id="disclaimer" class="disclaimer"></p>
+        <button id="again-btn" class="again-btn" type="button">Вытянуть ещё раз</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
