@@ -30,7 +30,11 @@
     <!-- Колода-веер -->
     <section id="deck-stage" class="deck-stage" hidden>
       <div id="deck" class="deck" role="group" aria-label="Колода карт"></div>
-      <p class="deck-hint">Коснись любой карты</p>
+      <p id="deck-hint" class="deck-hint">Коснись любой карты</p>
+      <div id="deck-empty" class="deck-empty" hidden>
+        <p class="deck-empty-text">Все карты вытянуты. Колода исчерпана.</p>
+        <button id="reshuffle-btn" class="again-btn" type="button">Перемешать колоду заново</button>
+      </div>
     </section>
 
     <!-- Результат гадания -->

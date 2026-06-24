@@ -111,7 +111,9 @@ body {
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  margin-bottom: 20px;
+  /* веер заходит ниже своего контейнера, поэтому отступ под ним крупный,
+     чтобы подпись не перекрывалась картами */
+  margin-bottom: 58px;
 }
 
 /* На узких экранах ужимаем весь веер, чтобы он не вылезал за края */
@@ -144,7 +146,8 @@ body {
   outline: none;
 }
 
-/* Рубашка карты — мистический орнамент */
+/* Рубашка карты — мистический орнамент (облегчённый: всего 3 слоя,
+   т.к. карт в веере много и тяжёлый фон ×22 сильно тормозит отрисовку) */
 .card-back-art {
   width: 100%;
   height: 100%;
@@ -152,14 +155,8 @@ body {
   border: 2px solid var(--gold);
   background-color: var(--card-bg);
   background-image:
-    radial-gradient(circle at 50% 26%, rgba(246,226,166,.95) 0 3px, transparent 4px),
-    radial-gradient(circle at 50% 50%, transparent 0 30px, rgba(231,200,115,.55) 30px 31px, transparent 32px),
-    radial-gradient(circle at 50% 50%, transparent 0 22px, rgba(231,200,115,.4) 22px 23px, transparent 24px),
-    repeating-conic-gradient(from 0deg at 50% 50%, rgba(231,200,115,.16) 0deg 15deg, transparent 15deg 30deg),
-    radial-gradient(circle at 20% 20%, rgba(246,226,166,.5) 0 1.5px, transparent 2px),
-    radial-gradient(circle at 80% 20%, rgba(246,226,166,.5) 0 1.5px, transparent 2px),
-    radial-gradient(circle at 20% 80%, rgba(246,226,166,.5) 0 1.5px, transparent 2px),
-    radial-gradient(circle at 80% 80%, rgba(246,226,166,.5) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 50% 50%, transparent 0 28px, rgba(231,200,115,.45) 28px 29px, transparent 30px),
+    repeating-conic-gradient(from 0deg at 50% 50%, rgba(231,200,115,.14) 0deg 15deg, transparent 15deg 30deg),
     linear-gradient(135deg, var(--card-bg-2), var(--card-bg));
   box-shadow:
     inset 0 0 0 5px rgba(10,6,23,.6),
@@ -183,6 +180,17 @@ body {
   font-size: 1.05rem;
   letter-spacing: .03em;
   opacity: .85;
+}
+
+.deck-empty {
+  text-align: center;
+  padding: 40px 16px 10px;
+}
+.deck-empty-text {
+  color: var(--ink-soft);
+  font-style: italic;
+  font-size: 1.15rem;
+  margin-bottom: 22px;
 }
 
 /* === Результат === */

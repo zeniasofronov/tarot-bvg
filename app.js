@@ -20,13 +20,17 @@
     'Предсказание не является официальной коммуникацией BVG, машинистов и духов перрона.'
   ];
 
-  var cards = [];
+  var cards = [];        // вся колода (все карты из cards.json)
+  var remaining = [];    // карты, ещё оставшиеся в колоде (тянем без возврата)
 
   // DOM
   var errorBox      = document.getElementById('error-box');
   var errorText     = document.getElementById('error-text');
   var deckStage     = document.getElementById('deck-stage');
   var deck          = document.getElementById('deck');
+  var deckHint      = document.getElementById('deck-hint');
+  var deckEmpty     = document.getElementById('deck-empty');
+  var reshuffleBtn  = document.getElementById('reshuffle-btn');
   var resultStage   = document.getElementById('result-stage');
   var drawnCard     = document.getElementById('drawn-card');
   var cardInner     = drawnCard.querySelector('.card-inner');
@@ -40,8 +44,6 @@
   var disclaimerEl  = document.getElementById('disclaimer');
   var againBtn      = document.getElementById('again-btn');
 
-  var DECK_SIZE = 13; // сколько карт в веере (рубашкой вверх)
-
   function showError(message) {
     errorText.textContent = message;
     errorBox.hidden = false;
@@ -50,6 +52,20 @@
   }
 
   function randInt(n) { return Math.floor(Math.random() * n); }
+
+  // Перемешать массив (алгоритм Фишера–Йейтса)
+  function shuffle(arr) {
+    for (var i = arr.length - 1; i > 0; i--) {
+      var j = randInt(i + 1);
+      var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+    }
+    return arr;
+  }
+
+  // Заполнить колоду заново всеми картами (в случайном порядке)
+  function resetDeck() {
+    remaining = shuffle(cards.slice());
+  }
 
   // Загрузка колоды
   fetch('cards.json', { cache: 'no-store' })
@@ -76,22 +92,27 @@
       if (cards.length === 0) {
         throw new Error('В картах не хватает обязательных полей (name, upright, reversed).');
       }
-      buildDeck();
+      resetDeck();
       showDeck();
     })
     .catch(function (err) {
       showError(err.message || 'Звёзды сегодня недоступны. Попробуй обновить страницу.');
     });
 
-  // Построение веера рубашкой вверх
+  // Построение веера рубашкой вверх — по одной карте на каждую оставшуюся
   function buildDeck() {
     deck.innerHTML = '';
-    var spread = 14;                 // угол между картами, градусов
-    var start  = -((DECK_SIZE - 1) / 2) * spread;
+    var n = remaining.length;
+    if (n === 0) return;
 
-    for (var i = 0; i < DECK_SIZE; i++) {
+    // суммарный угол веера ограничиваем, чтобы 22 карты помещались;
+    // при малом числе карт шаг не больше 14°, иначе веер «разъезжается»
+    var spread = n > 1 ? Math.min(14, 150 / (n - 1)) : 0;
+    var start  = -((n - 1) / 2) * spread;
+
+    remaining.forEach(function (cardData, i) {
       var angle = start + i * spread;
-      var lift  = -Math.abs(angle) * 1.1; // приподнимаем края веера
+      var lift  = -Math.abs(angle) * 0.8; // приподнимаем края веера дугой
 
       var card = document.createElement('button');
       card.type = 'button';
@@ -107,20 +128,36 @@
       art.className = 'card-back-art';
       card.appendChild(art);
 
-      card.addEventListener('click', drawCard);
+      // каждая карта в веере привязана к конкретной карте из колоды
+      card.addEventListener('click', function () { drawCard(cardData); });
       deck.appendChild(card);
-    }
+    });
   }
 
   function showDeck() {
     errorBox.hidden = true;
     resultStage.hidden = true;
     deckStage.hidden = false;
+
+    if (remaining.length > 0) {
+      buildDeck();
+      deck.hidden = false;
+      deckHint.hidden = false;
+      deckHint.textContent = 'Коснись любой карты · осталось ' + remaining.length + ' из ' + cards.length;
+      deckEmpty.hidden = true;
+    } else {
+      // колода исчерпана — предлагаем перемешать заново
+      deck.innerHTML = '';
+      deck.hidden = true;
+      deckHint.hidden = true;
+      deckEmpty.hidden = false;
+    }
   }
 
-  // Гадание
-  function drawCard() {
-    var card = cards[randInt(cards.length)];
+  // Гадание конкретной картой (она уходит из колоды)
+  function drawCard(card) {
+    var idx = remaining.indexOf(card);
+    if (idx !== -1) remaining.splice(idx, 1); // убираем из колоды без возврата
     var isReversed = Math.random() < 0.5;
 
     // Заполняем лицо карты
@@ -188,6 +225,13 @@
     cardInner.style.transition = 'none';
     cardInner.style.transform = 'rotateY(0deg)';
     prophecy.hidden = true;
+    showDeck();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // Перемешать колоду заново — снова все карты
+  reshuffleBtn.addEventListener('click', function () {
+    resetDeck();
     showDeck();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
